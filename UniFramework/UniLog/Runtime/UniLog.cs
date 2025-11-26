@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using System.Text;
 using System.Diagnostics;
@@ -106,7 +107,7 @@ namespace UniFramework.Log
         }
 
         /// <summary>
-        /// 获取存储目录
+        /// 获取存储目录（实例内部使用）
         /// </summary>
         /// <returns></returns>
         private string GetDirectory()
@@ -139,6 +140,30 @@ namespace UniFramework.Log
                     if (dateTime.Subtract(expiryDate).Days > MAXRETENTIONDAYS) File.Delete(files[i]);
                 }
             }
+        }
+
+        /// <summary>
+        /// 对外获取日志目录（用于调试面板等）
+        /// </summary>
+        public static string GetLogDirectory()
+        {
+            return Instance.GetDirectory();
+        }
+
+        /// <summary>
+        /// 获取最近的日志文件列表（按修改时间倒序）
+        /// </summary>
+        public static string[] GetRecentLogFiles(int maxCount = 10)
+        {
+            string directory = GetLogDirectory();
+            if (!Directory.Exists(directory))
+                return Array.Empty<string>();
+
+            string[] files = Directory.GetFiles(directory);
+            return files
+                .OrderByDescending(File.GetLastWriteTime)
+                .Take(Math.Max(0, maxCount))
+                .ToArray();
         }
 
         /// <summary>
