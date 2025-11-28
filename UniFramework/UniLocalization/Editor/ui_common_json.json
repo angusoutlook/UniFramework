@@ -1,0 +1,12 @@
+{
+    "entries": [
+        {
+            "key": "HELLO",
+            "value": "xxxx"
+        },
+        {
+            "key": "QUIT",
+            "value": "yyyy"
+        }
+    ]
+}
